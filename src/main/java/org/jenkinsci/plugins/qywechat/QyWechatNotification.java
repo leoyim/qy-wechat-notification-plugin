@@ -38,6 +38,8 @@ public class QyWechatNotification extends Publisher implements SimpleBuildStep {
 
     private String projectName;
 
+    private int buildNumber;
+
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
@@ -95,8 +97,10 @@ public class QyWechatNotification extends Publisher implements SimpleBuildStep {
         //设置当前项目名称
         this.projectName = run.getParent().getFullDisplayName();
 
+        this.buildNumber = run.getNumber();
+
         //构建结束通知
-        BuildOverInfo buildInfo = new BuildOverInfo(this.projectName, run, config);
+        BuildOverInfo buildInfo = new BuildOverInfo(this.projectName, this.buildNumber, run, config);
 
         String req = buildInfo.toJSONString();
         listener.getLogger().println("推送通知" + req);

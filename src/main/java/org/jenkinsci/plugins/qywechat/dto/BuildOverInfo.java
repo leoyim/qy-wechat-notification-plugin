@@ -32,6 +32,11 @@ public class BuildOverInfo {
     private String projectName;
 
     /**
+     * 构建编号
+     */
+    private int buildNumber;
+
+    /**
      * 环境名称
      */
     private String topicName = "";
@@ -41,7 +46,7 @@ public class BuildOverInfo {
      */
     private Result result;
 
-    public BuildOverInfo(String projectName, Run<?, ?> run, NotificationConfig config){
+    public BuildOverInfo(String projectName, int buildNumber, Run<?, ?> run, NotificationConfig config){
         //使用时间
         this.useTimeString = run.getTimestampString();
         //控制台地址
@@ -62,6 +67,8 @@ public class BuildOverInfo {
         this.consoleUrl = urlBuilder.toString();
         //工程名称
         this.projectName = projectName;
+        //构建编号
+        this.buildNumber = buildNumber;
         //环境名称
         if(config.topicName!=null){
             topicName = config.topicName;
@@ -76,7 +83,8 @@ public class BuildOverInfo {
         if(StringUtils.isNotEmpty(topicName)){
             content.append(this.topicName);
         }
-        content.append("<font color=\"info\">【" + this.projectName + "】</font>构建" + getStatus() + "\n");
+        content.append("<font color=\"info\">【" + this.projectName + " #" + getBuildNumber() + "】</font>构建" + getStatus() + "\n");
+        content.append(" >构建用时：<font color=\"comment\">" +  this.useTimeString + "</font>\n");
         content.append(" >构建用时：<font color=\"comment\">" +  this.useTimeString + "</font>\n");
         if(StringUtils.isNotEmpty(this.consoleUrl)) {
             content.append(" >[查看控制台](" + this.consoleUrl + ")");
@@ -106,6 +114,10 @@ public class BuildOverInfo {
             return "<font color=\"info\">成功~</font>" + successFaces[ran];
         }
         return "<font color=\"warning\">情况未知</font>";
+    }
+
+    private int getBuildNumber() {
+        return this.buildNumber;
     }
 
     String []successFaces = {
